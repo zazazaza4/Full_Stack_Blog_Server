@@ -1,5 +1,6 @@
 import User from '../models/User.js';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 //Register user
 export const register = async (req, res) => {
@@ -17,7 +18,7 @@ export const register = async (req, res) => {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(password, salt);
 
-    const newUser = new UserShema({
+    const newUser = new User({
       username,
       email,
       password: hash,
@@ -25,6 +26,48 @@ export const register = async (req, res) => {
 
     await newUser.save();
     res.status(200).json({ newUser, message: 'success' });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+};
+
+//Login user
+export const login = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(400).json({
+        message:
+          ' The username and/or password that you have entered is incorrect.',
+      });
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) {
+      return res.status(400).json({
+        message:
+          ' The username and/or password that you have entered is incorrect.',
+      });
+    }
+
+    const token = jwt.sign(
+      {
+        id: user._id,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: '30d',
+      }
+    );
+
+    res.json({
+      token,
+      user,
+      message: 'success',
+    });
   } catch (error) {
     res.status(500).json(error);
   }
