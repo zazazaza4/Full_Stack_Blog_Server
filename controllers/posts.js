@@ -13,30 +13,29 @@ export const createPost = async (req, res) => {
     let fileName = null;
 
     if (file) {
-      fileName = Date.now().toString() + req.files?.image?.name;
+      fileName = Date.now().toString() + file;
+      const __dirname = dirname(fileURLToPath(import.meta.url));
+      req.files.image.mv(path.join(__dirname, '..', 'uploads', fileName));
     } else {
       fileName = 'default.jpg';
     }
-
-    const __dirname = dirname(fileURLToPath(import.meta.url));
-    req.files.image.mv(path.join(__dirname, '..', 'uploads', fileName));
 
     const newPost = new Post({
       username: user.username,
       title,
       text,
-      imgUrl: fileName,
+      photo: fileName,
       author: req.userId,
     });
 
     await newPost.save();
     await User.findByIdAndUpdate(req.userId, {
-      $push: { posts: newPostWithImage },
+      $push: { posts: newPost },
     });
 
-    res.status(200).json(savedPost);
+    return res.status(200).json(newPost);
   } catch (error) {
-    res.status(500).json(error);
+    return res.status(500).json(error);
   }
 };
 
