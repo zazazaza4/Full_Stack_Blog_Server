@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-export const PostSchema = new mongoose.Schema(
+const PostSchema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -18,6 +18,18 @@ export const PostSchema = new mongoose.Schema(
     categories: {
       type: Array,
       required: false,
+    },
+    views: {
+      type: String,
+      default: 0,
+    },
+    author: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    comments: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comment',
     },
   },
   { timestamps: true }

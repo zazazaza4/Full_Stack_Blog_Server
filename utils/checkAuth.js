@@ -5,18 +5,17 @@ export const checkAuth = (req, res, next) => {
 
   if (token) {
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
+      const decoded = jwt.verify(JSON.parse(token), process.env.JWT_SECRET);
       req.userId = decoded.id;
 
       next();
     } catch (error) {
-      return res.json({
+      return res.status(401).json({
         message: 'It is not allowed',
       });
     }
   } else {
-    return res.json({
+    return res.status(404).json({
       message: 'It is not allowed',
     });
   }

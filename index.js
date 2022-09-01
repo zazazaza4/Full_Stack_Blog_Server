@@ -4,16 +4,14 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 
 import authRoute from './routes/auth.js';
+import usersRoute from './routes/users.js';
+import postsRoute from './routes/posts.js';
 
 const app = express();
 
 dotenv.config();
 
 const PORT = process.env.PORT || 5001;
-
-//Middleware
-app.use(express.json());
-app.use(cors());
 
 mongoose
   .connect(
@@ -30,7 +28,14 @@ mongoose
     console.log(err);
   });
 
-app.use('/auth', authRoute);
+//Middleware
+app.use(cors());
+app.use(express.json());
+
+app.use('/api/auth', authRoute);
+app.use('/api/users', usersRoute);
+app.use('api/posts', postsRoute);
+// app.use('/comments', authRoute);
 
 app.listen(PORT, () => {
   console.log(`Server started on port: ${PORT}`);

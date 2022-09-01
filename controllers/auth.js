@@ -9,11 +9,7 @@ export const register = async (req, res) => {
 
     const isUser = await User.findOne({ username });
 
-    if (isUser) {
-      return res.json({
-        message: 'User already exists',
-      });
-    }
+    isUser && res.json({ message: 'User already exists' });
 
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(password, salt);
@@ -41,10 +37,9 @@ export const login = async (req, res) => {
     if (!user) {
       return res.status(400).json({
         message:
-          ' The username and/or password that you have entered is incorrect.',
+          ' The user and/or password that you have entered is incorrect.',
       });
     }
-
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) {
       return res.status(400).json({
@@ -63,7 +58,7 @@ export const login = async (req, res) => {
       }
     );
 
-    res.json({
+    return res.json({
       token,
       user,
       message: 'success',
@@ -79,10 +74,7 @@ export const getMe = async (req, res) => {
     const user = await User.findById(req.userId);
 
     if (!user) {
-      return res.status(400).json({
-        message:
-          ' The username and/or password that you have entered is incorrect.',
-      });
+      return res.json({ message: 'User does not already exist' });
     }
 
     const token = jwt.sign(
@@ -95,11 +87,12 @@ export const getMe = async (req, res) => {
       }
     );
 
-    res.json({
+    return res.json({
       token,
       user,
       message: 'success',
     });
-  } catch (error) {}
-  res.status(500).json(error);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 };

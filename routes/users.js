@@ -1,14 +1,16 @@
 import { Router } from 'express';
+import { deleteUser, getUser, updateUser } from '../controllers/users.js';
+import { checkAuth } from '../utils/checkAuth.js';
 
 const router = Router();
 
 //UPDATE
-router.put('/:id', register);
+router.put('/:id', checkAuth, updateUser);
 
 //DELETE
-router.post('/login', login);
+router.delete('/:id', checkAuth, deleteUser);
 
-//ME
-router.get('/me', register);
+//Get User
+router.get('/:id', getUser);
 
 export default router;
