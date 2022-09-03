@@ -2,6 +2,9 @@ import mongoose from 'mongoose';
 
 const PostSchema = new mongoose.Schema(
   {
+    username: {
+      type: String,
+    },
     title: {
       type: String,
       required: true,
@@ -20,7 +23,7 @@ const PostSchema = new mongoose.Schema(
       required: false,
     },
     views: {
-      type: String,
+      type: Number,
       default: 0,
     },
     author: {

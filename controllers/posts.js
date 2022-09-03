@@ -45,8 +45,25 @@ export const getAll = async (req, res) => {
     const posts = await Post.find().sort('-createdAt');
     const popularPosts = await Post.find().limit(5).sort('-views');
 
-    !posts && res.json({ message: 'There are no posts ' });
+    if (!posts) {
+      return res.json({ message: 'There are no posts ' });
+    }
+
     res.json({ posts, popularPosts });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+export const getById = async (req, res) => {
+  try {
+    console.log(req.params.id);
+    const post = await Post.findByIdAndUpdate(req.params.id, {
+      $inc: { views: 1 },
+    });
+    console.log(post);
+
+    return res.json(post);
   } catch (error) {
     res.status(500).json(error);
   }
