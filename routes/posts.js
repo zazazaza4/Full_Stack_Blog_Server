@@ -8,6 +8,6 @@ const router = Router();
 router.post('/', checkAuth, createPost);
 
 //Get All Posts
-router.get('/:id', getAll);
+router.get('/', getAll);
 
 export default router;

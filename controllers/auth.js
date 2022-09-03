@@ -1,15 +1,31 @@
 import User from '../models/User.js';
 import bcrypt from 'bcrypt';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
 import jwt from 'jsonwebtoken';
 
 //Register user
 export const register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
+    console.log(req.body);
 
     const isUser = await User.findOne({ username });
 
-    isUser && res.json({ message: 'User already exists' });
+    if (isUser) {
+      return res.json({ message: 'User already exists' });
+    }
+
+    const file = req.files?.image?.name;
+    let fileName = null;
+
+    if (file) {
+      fileName = Date.now().toString() + file;
+      const __dirname = dirname(fileURLToPath(import.meta.url));
+      req.files.image.mv(path.join(__dirname, '..', 'uploads/users', fileName));
+    } else {
+      fileName = 'users/default.jpg';
+    }
 
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(password, salt);
@@ -18,10 +34,11 @@ export const register = async (req, res) => {
       username,
       email,
       password: hash,
+      profilePic: file,
     });
 
     await newUser.save();
-    res.status(200).json({ newUser, message: 'success' });
+    return res.status(200).json({ newUser, message: 'success' });
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
