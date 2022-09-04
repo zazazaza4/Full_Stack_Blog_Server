@@ -7,6 +7,7 @@ import fileUpload from 'express-fileupload';
 import authRoute from './routes/auth.js';
 import usersRoute from './routes/users.js';
 import postsRoute from './routes/posts.js';
+import categoriesRoute from './routes/categories.js';
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.use(express.static('uploads'));
 app.use('/api/auth', authRoute);
 app.use('/api/users', usersRoute);
 app.use('/api/posts', postsRoute);
+app.use('/api/categories', categoriesRoute);
 // app.use('/comments', authRoute);
 
 app.listen(PORT, () => {
