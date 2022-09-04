@@ -55,6 +55,7 @@ export const getAll = async (req, res) => {
   }
 };
 
+// Get Post By Id
 export const getById = async (req, res) => {
   try {
     console.log(req.params.id);
@@ -66,5 +67,41 @@ export const getById = async (req, res) => {
     return res.json(post);
   } catch (error) {
     res.status(500).json(error);
+  }
+};
+
+// Remove Post
+export const removePost = async (req, res) => {
+  try {
+    const post = await Post.findByIdAndDelete(req.params.id);
+
+    if (!post) {
+      return res.json({ message: 'Post does not exist' });
+    }
+
+    await User.findByIdAndUpdate(req.userId, {
+      $pull: { posts: req.params.id },
+    });
+
+    res.json({ message: 'Success' });
+  } catch (error) {
+    res.json({ message: 'Something went wrong' });
+  }
+};
+
+// Update Post
+export const updatePost = async (req, res) => {
+  try {
+    const updatedPost = await Post.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: req.body,
+      },
+      { new: true }
+    );
+
+    return res.status(200).json(updatedPost);
+  } catch (error) {
+    return res.status(500).json(error);
   }
 };
