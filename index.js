@@ -8,6 +8,7 @@ import authRoute from './routes/auth.js';
 import usersRoute from './routes/users.js';
 import postsRoute from './routes/posts.js';
 import categoriesRoute from './routes/categories.js';
+import commetsRoute from './routes/comments.js';
 
 const app = express();
 
@@ -40,7 +41,7 @@ app.use('/api/auth', authRoute);
 app.use('/api/users', usersRoute);
 app.use('/api/posts', postsRoute);
 app.use('/api/categories', categoriesRoute);
-// app.use('/comments', authRoute);
+app.use('/comments', commetsRoute);
 
 app.listen(PORT, () => {
   console.log(`Server started on port: ${PORT}`);

@@ -4,10 +4,10 @@ import { checkAuth } from '../utils/checkAuth.js';
 
 const router = Router();
 
-//Create Post
+//Create Category
 router.post('/', checkAuth, createCategory);
 
-//Get All Posts
+//Get All Categories
 router.get('/', getAll);
 
 export default router;
