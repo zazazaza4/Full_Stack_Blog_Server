@@ -14,7 +14,7 @@ const app = express();
 
 dotenv.config();
 
-const PORT = process.env.PORT || 5001;
+const PORT = 5000;
 const MONGO_URL = process.env.MONGO_URL;
 
 mongoose
