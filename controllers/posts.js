@@ -58,11 +58,9 @@ export const getAll = async (req, res) => {
 // Get Post By Id
 export const getById = async (req, res) => {
   try {
-    console.log(req.params.id);
     const post = await Post.findByIdAndUpdate(req.params.id, {
       $inc: { views: 1 },
     });
-    console.log(post);
 
     return res.json(post);
   } catch (error) {
