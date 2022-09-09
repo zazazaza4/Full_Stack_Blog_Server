@@ -2,6 +2,7 @@ import Post from '../models/Post.js';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import User from '../models/User.js';
+import Category from '../models/Category.js';
 
 // Create Post
 export const createPost = async (req, res) => {
@@ -24,6 +25,7 @@ export const createPost = async (req, res) => {
       username: user.username,
       title,
       text,
+      category: Category,
       photo: fileName,
       author: req.userId,
     });
