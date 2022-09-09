@@ -7,7 +7,7 @@ import Category from '../models/Category.js';
 // Create Post
 export const createPost = async (req, res) => {
   try {
-    const { title, text } = req.body;
+    const { title, text, category } = req.body;
     const user = await User.findById(req.userId);
 
     const file = req.files?.image?.name;
@@ -25,7 +25,7 @@ export const createPost = async (req, res) => {
       username: user.username,
       title,
       text,
-      category: Category,
+      category,
       photo: fileName,
       author: req.userId,
     });
