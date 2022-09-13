@@ -2,7 +2,6 @@ import Post from '../models/Post.js';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import User from '../models/User.js';
-import Category from '../models/Category.js';
 
 // Create Post
 export const createPost = async (req, res) => {
@@ -43,15 +42,42 @@ export const createPost = async (req, res) => {
 
 // Get All Posts
 export const getAll = async (req, res) => {
-  try {
-    const posts = await Post.find().sort('-createdAt');
-    const popularPosts = await Post.find().limit(5).sort('-views');
+  let { username, category: categoryName, limit, page } = req.query;
+  page = page || 1;
+  limit = limit || 9;
+  let offset = page * limit - limit;
 
-    if (!posts) {
-      return res.json({ message: 'There are no posts ' });
+  try {
+    let posts = [];
+    if (!username && !categoryName) {
+      posts = await Post.find().skip(offset).limit(limit).sort('-createdAt');
+    } else if (username && !category) {
+      posts = await Post.find({ username })
+        .skip(offset)
+        .limit(limit)
+        .sort('-createdAt');
+    } else if (!username && categoryName) {
+      posts = await Post.find({
+        category: categoryName,
+      })
+        .skip(offset)
+        .limit(limit)
+        .sort('-createdAt');
+    } else if (username && categoryName) {
+      posts = await Post.find(
+        {
+          username,
+        },
+        { category: categoryName }
+      )
+        .skip(offset)
+        .limit(limit)
+        .sort('-createdAt');
     }
 
-    res.json({ posts, popularPosts });
+    const popularPosts = await Post.find().limit(5).sort('-views');
+
+    return res.json({ posts, popularPosts });
   } catch (error) {
     res.status(500).json(error);
   }
