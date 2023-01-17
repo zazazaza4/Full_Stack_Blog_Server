@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createComment } from "../Controllers/comments.js";
+import { createComment } from "../сontrollers/comments.js";
 import { checkAuth } from "../utils/checkAuth.js";
 
 const router = Router();

@@ -5,7 +5,7 @@ import {
   getById,
   removePost,
   updatePost,
-} from "../Controllers/posts.js";
+} from "../сontrollers/posts.js";
 import { checkAuth } from "../utils/checkAuth.js";
 
 const router = Router();
