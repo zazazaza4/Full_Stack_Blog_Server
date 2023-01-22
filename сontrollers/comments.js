@@ -1,12 +1,17 @@
-import Comment from '../models/Comment.js';
+import Comment from "../models/Comment.js";
+import Post from "../models/Post.js";
 
 // Create Comment
 export const createComment = async (req, res) => {
   try {
-    const { postId } = req.body;
+    const { postId, comment } = req.body;
 
-    const newComment = await Comment(req.body);
-    const savedComment = await newComment.save();
+    if (!comment) {
+      return res.json({ message: "The comment can not be empty" });
+    }
+
+    const newComment = new Comment({ comment });
+    await newComment.save();
 
     try {
       await Post.findByIdAndUpdate(postId, {
@@ -16,7 +21,7 @@ export const createComment = async (req, res) => {
       return res.status(500).json(error);
     }
 
-    return res.status(200).json(savedComment);
+    return res.status(200).json(newComment);
   } catch (error) {
     return res.status(500).json(error);
   }

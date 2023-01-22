@@ -1,7 +1,7 @@
-import Post from '../models/Post.js';
-import path, { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import User from '../models/User.js';
+import Post from "../models/Post.js";
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
+import User from "../models/User.js";
 
 // Create Post
 export const createPost = async (req, res) => {
@@ -15,9 +15,9 @@ export const createPost = async (req, res) => {
     if (file) {
       fileName = Date.now().toString() + file;
       const __dirname = dirname(fileURLToPath(import.meta.url));
-      req.files.image.mv(path.join(__dirname, '..', 'uploads', fileName));
+      req.files.image.mv(path.join(__dirname, "..", "uploads", fileName));
     } else {
-      fileName = 'default.jpg';
+      fileName = "default.jpg";
     }
 
     const newPost = new Post({
@@ -42,6 +42,7 @@ export const createPost = async (req, res) => {
 
 // Get All Posts
 export const getAll = async (req, res) => {
+  console.log(req.query);
   let { username, category: categoryName, limit, page } = req.query;
   page = page || 1;
   limit = limit || 9;
@@ -50,19 +51,19 @@ export const getAll = async (req, res) => {
   try {
     let posts = [];
     if (!username && !categoryName) {
-      posts = await Post.find().skip(offset).limit(limit).sort('-createdAt');
+      posts = await Post.find().skip(offset).limit(limit).sort("-createdAt");
     } else if (username && !category) {
       posts = await Post.find({ username })
         .skip(offset)
         .limit(limit)
-        .sort('-createdAt');
+        .sort("-createdAt");
     } else if (!username && categoryName) {
       posts = await Post.find({
         category: categoryName,
       })
         .skip(offset)
         .limit(limit)
-        .sort('-createdAt');
+        .sort("-createdAt");
     } else if (username && categoryName) {
       posts = await Post.find(
         {
@@ -72,10 +73,10 @@ export const getAll = async (req, res) => {
       )
         .skip(offset)
         .limit(limit)
-        .sort('-createdAt');
+        .sort("-createdAt");
     }
 
-    const popularPosts = await Post.find().limit(5).sort('-views');
+    const popularPosts = await Post.find().limit(5).sort("-views");
 
     return res.json({ posts, popularPosts });
   } catch (error) {
@@ -102,16 +103,16 @@ export const removePost = async (req, res) => {
     const post = await Post.findByIdAndDelete(req.params.id);
 
     if (!post) {
-      return res.json({ message: 'Post does not exist' });
+      return res.json({ message: "Post does not exist" });
     }
 
     await User.findByIdAndUpdate(req.userId, {
       $pull: { posts: req.params.id },
     });
 
-    res.json({ message: 'Success' });
+    res.json({ message: "Success" });
   } catch (error) {
-    res.json({ message: 'Something went wrong' });
+    res.json({ message: "Something went wrong" });
   }
 };
 
