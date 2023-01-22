@@ -3,6 +3,7 @@ import {
   createPost,
   getAll,
   getById,
+  getPostComments,
   removePost,
   updatePost,
 } from "../сontrollers/posts.js";
@@ -24,5 +25,8 @@ router.get("/:id", checkAuth, removePost);
 
 //Update Post
 router.get("/:id", checkAuth, updatePost);
+
+// Get Post Comments
+router.get("/comments/:id", getPostComments);
 
 export default router;
