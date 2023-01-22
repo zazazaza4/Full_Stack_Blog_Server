@@ -39,7 +39,7 @@ app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/posts", postsRoute);
 app.use("/api/categories", categoriesRoute);
-app.use("/comments", commetsRoute);
+app.use("/api/comments", commetsRoute);
 
 app.listen(PORT, () => {
   console.log(`Server started on port: ${PORT}`);
